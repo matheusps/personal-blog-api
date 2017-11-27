@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,7 +23,7 @@ func CreatePost(context *gin.Context) {
 	var post Post
 	context.BindJSON(&post)
 	db.Create(&post)
-	context.JSON(200, post)
+	context.JSON(http.StatusOK, post)
 }
 
 func GetPosts(context *gin.Context) {
@@ -35,7 +37,7 @@ func GetPosts(context *gin.Context) {
 		context.AbortWithStatus(404)
 		fmt.Println(err)
 	} else {
-		context.JSON(200, posts)
+		context.JSON(http.StatusOK, posts)
 	}
 }
 
@@ -47,10 +49,10 @@ func GetPost(context *gin.Context) {
 	id := context.Params.ByName("id")
 	var post Post
 	if err := db.Where("id = ?", id).First(&post).Error; err != nil {
-		context.AbortWithStatus(404)
+		context.AbortWithStatus(http.StatusNotFound)
 		fmt.Println(err)
 	} else {
-		context.JSON(200, post)
+		context.JSON(http.StatusOK, post)
 	}
 }
 
@@ -62,12 +64,12 @@ func UpdatePosts(context *gin.Context) {
 	var post Post
 	id := context.Params.ByName("id")
 	if err := db.Where("id = ?", id).First(&post).Error; err != nil {
-		context.AbortWithStatus(404)
+		context.AbortWithStatus(http.StatusNotFound)
 		fmt.Println(err)
 	}
 	context.BindJSON(&post)
 	db.Save(&post)
-	context.JSON(200, post)
+	context.JSON(http.StatusOK, post)
 }
 
 func DeletePosts(context *gin.Context) {
@@ -79,7 +81,7 @@ func DeletePosts(context *gin.Context) {
 	var post Post
 	res := db.Where("id = ?", id).Delete(&post)
 	fmt.Println(res)
-	context.JSON(200, gin.H{
+	context.JSON(http.StatusOK, gin.H{
 		"id #" + id: "deleted",
 	})
 }

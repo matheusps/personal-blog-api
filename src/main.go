@@ -1,7 +1,9 @@
 package main
 
+const port string = ":8080"
+
 func main() {
 	server := provideServer()
 	AutoMigrateTypes()
-	server.Run(":8080")
+	server.Run(port)
 }
