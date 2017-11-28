@@ -62,11 +62,13 @@ func UpdatePosts(context *gin.Context) {
 	defer db.Close()
 
 	var post Post
+
 	id := context.Params.ByName("id")
 	if err := db.Where("id = ?", id).First(&post).Error; err != nil {
 		context.AbortWithStatus(http.StatusNotFound)
 		fmt.Println(err)
 	}
+
 	context.BindJSON(&post)
 	db.Save(&post)
 	context.JSON(http.StatusOK, post)

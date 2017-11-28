@@ -7,12 +7,14 @@ import (
 func provideServer() *gin.Engine {
 
 	app := gin.Default()
+
 	app.Use(CORSMiddleware())
+
 	app.GET("/posts/", GetPosts)
 	app.GET("/posts/:id", GetPost)
-	app.POST("/posts", CreatePost)
-	app.PUT("posts/:id", UpdatePosts)
-	app.DELETE("/post/:id", DeletePosts)
+	app.POST("/posts/", CreatePost)
+	app.PUT("/posts/:id", UpdatePosts)
+	app.DELETE("/posts/:id", DeletePosts)
 
 	return app
 }
